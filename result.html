@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analysis Result - CampusFix AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="nav"><div class="brand">🛠️ CampusFix <span>AI</span></div><a href="/" class="navbtn">New Complaint</a></nav>
+<main class="resultWrap">
+  <div class="success">✓ Complaint #{{ complaint_id }} submitted successfully</div>
+  <h1>AI Analysis Result</h1>
+  <p class="muted">Here is how CampusFix understood the problem.</p>
+
+  <div class="resultGrid">
+    <div class="card resultCard">
+      <p class="label">CATEGORY</p><h2>{{ category }}</h2>
+      <p class="label">RESPONSIBLE DEPARTMENT</p><h2>{{ department }}</h2>
+      <p class="label">LOCATION</p><h3>{{ location }}</h3>
+    </div>
+    <div class="card resultCard">
+      <p class="label">PRIORITY</p>
+      <div class="priority {{ priority|lower }}">{{ priority }}</div>
+      <p class="label">SIMILAR COMPLAINTS FOUND</p>
+      <div class="bigNumber">{{ similar_count }}</div>
+      {% if similar_count > 0 %}
+      <p class="muted">This may be part of an existing campus issue.</p>
+      {% else %}
+      <p class="muted">No strong matching complaint was found at this location.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card explanation">
+    <h2>🤖 Why did AI classify it this way?</h2>
+    <p><b>Your report:</b> “{{ description }}”</p>
+    <ul>
+      <li>The system searched for issue-related keywords and patterns.</li>
+      <li>It mapped the issue to a campus department.</li>
+      <li>Urgency-related words influence the priority level.</li>
+      <li>Reports from the same location are compared for similarity.</li>
+    </ul>
+  </div>
+
+  <div class="actions">
+    <a class="primary btn" href="/">Submit another</a>
+    <a class="secondary btn" href="/admin">Open Admin Dashboard</a>
+  </div>
+</main>
+</body>
+</html>

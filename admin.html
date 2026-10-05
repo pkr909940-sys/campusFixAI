@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard - CampusFix AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="nav">
+  <div class="brand">🛠️ CampusFix <span>AI</span></div>
+  <div class="navActions"><a href="/" class="navbtn">Student Portal</a><a href="/seed" class="navbtn">Load Demo</a><a href="/clear" class="dangerLink" onclick="return confirm('Clear all complaints?')">Clear</a></div>
+</nav>
+
+<main class="dashboard">
+  <div class="dashHead">
+    <div><div class="badge">ADMIN CONTROL CENTER</div><h1>Campus Intelligence Dashboard</h1><p class="muted">Monitor, prioritize and resolve student-reported issues.</p></div>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><span>Total</span><b id="total">0</b></div>
+    <div class="stat high"><span>High Priority</span><b id="high">0</b></div>
+    <div class="stat medium"><span>Medium</span><b id="medium">0</b></div>
+    <div class="stat resolved"><span>Resolved</span><b id="resolved">0</b></div>
+  </section>
+
+  <section class="dashGrid">
+    <div class="card panel">
+      <div class="panelHead"><h2>🔥 Top Active Locations</h2></div>
+      <div id="locations" class="bars"></div>
+    </div>
+    <div class="card panel">
+      <div class="panelHead"><h2>📊 Issue Categories</h2></div>
+      <div id="categories" class="bars"></div>
+    </div>
+  </section>
+
+  <section class="card panel">
+    <div class="panelHead"><h2>Recent Complaints</h2><span class="muted">Live database</span></div>
+    <div class="tableWrap">
+    <table>
+      <thead><tr><th>ID</th><th>Issue</th><th>Location</th><th>Category</th><th>Priority</th><th>Department</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+      {% for c in complaints %}
+      <tr>
+        <td>#{{ c.id }}</td>
+        <td>{{ c.description }}</td>
+        <td>{{ c.location }}</td>
+        <td>{{ c.category }}</td>
+        <td><span class="pill {{ c.priority|lower }}">{{ c.priority }}</span></td>
+        <td>{{ c.department }}</td>
+        <td><span class="status">{{ c.status }}</span></td>
+        <td>
+          <form method="POST" action="/update/{{ c.id }}">
+            <select name="status" onchange="this.form.submit()">
+              <option {% if c.status=='Pending' %}selected{% endif %}>Pending</option>
+              <option {% if c.status=='In Progress' %}selected{% endif %}>In Progress</option>
+              <option {% if c.status=='Resolved' %}selected{% endif %}>Resolved</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="empty">No complaints yet. Click “Load Demo” or submit one from the student portal.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+</main>
+<script>
+async function loadStats(){
+  const r = await fetch('/api/stats');
+  const d = await r.json();
+  document.getElementById('total').textContent=d.total;
+  document.getElementById('high').textContent=d.high;
+  document.getElementById('medium').textContent=d.medium;
+  document.getElementById('resolved').textContent=d.resolved;
+
+  const maxLoc=Math.max(...d.locations.map(x=>x.count),1);
+  document.getElementById('locations').innerHTML=d.locations.length
+    ? d.locations.map(x=>`<div class="barRow"><span>${x.name}</span><b>${x.count}</b><i><em style="width:${x.count/maxLoc*100}%"></em></i></div>`).join('')
+    : '<p class="muted">No data yet.</p>';
+
+  const maxCat=Math.max(...d.categories.map(x=>x.count),1);
+  document.getElementById('categories').innerHTML=d.categories.length
+    ? d.categories.map(x=>`<div class="barRow"><span>${x.name}</span><b>${x.count}</b><i><em style="width:${x.count/maxCat*100}%"></em></i></div>`).join('')
+    : '<p class="muted">No data yet.</p>';
+}
+loadStats();
+</script>
+</body>
+</html>

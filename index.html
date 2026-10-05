@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CampusFix AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="nav">
+  <div class="brand">🛠️ CampusFix <span>AI</span></div>
+  <a href="/admin" class="navbtn">Admin Dashboard</a>
+</nav>
+
+<main class="hero">
+  <section class="heroText">
+    <div class="badge">AI-POWERED SMART CAMPUS</div>
+    <h1>Report a problem.<br><span>Let AI organize it.</span></h1>
+    <p>Students report campus problems in simple language. CampusFix automatically classifies the issue, estimates priority, assigns the responsible department and helps identify similar complaints.</p>
+    <div class="miniStats">
+      <div><b>01</b><small>Report</small></div>
+      <div><b>02</b><small>AI Analyze</small></div>
+      <div><b>03</b><small>Resolve</small></div>
+    </div>
+  </section>
+
+  <section class="card formCard">
+    <h2>Submit a Complaint</h2>
+    <p class="muted">No technical language required.</p>
+    <form method="POST" action="/submit">
+      <label>Your name <span>(optional)</span></label>
+      <input name="name" placeholder="e.g. Prince Kumar">
+
+      <label>Location *</label>
+      <input name="location" required placeholder="e.g. Block B, Room 203">
+
+      <label>What is the problem? *</label>
+      <textarea name="description" required rows="6" placeholder="Example: Block B Wi-Fi has not been working for two days..."></textarea>
+
+      <button class="primary" type="submit">🤖 Analyze & Submit</button>
+    </form>
+    <div class="demoLinks">
+      <a href="/seed">Load demo complaints</a>
+      <a href="/admin">View dashboard →</a>
+    </div>
+  </section>
+</main>
+
+<section class="how">
+  <h2>How CampusFix works</h2>
+  <div class="steps">
+    <div class="step"><div>1</div><h3>Student reports</h3><p>Write the issue in normal language.</p></div>
+    <div class="step"><div>2</div><h3>AI analyzes</h3><p>Category, priority and department are detected automatically.</p></div>
+    <div class="step"><div>3</div><h3>Admin acts</h3><p>Dashboard groups problems and tracks resolution.</p></div>
+  </div>
+</section>
+</body>
+</html>

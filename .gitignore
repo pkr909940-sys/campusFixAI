@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+campusfix.db
+.env
+.DS_Store
